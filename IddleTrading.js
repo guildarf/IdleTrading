@@ -198,10 +198,26 @@ IdleTrading.launch = function(){
 			var price = Math.round(100 * M.getGoodPrice(good)) / 100;
 			
 			if(IdleTrading.config.autoBuy && conf.buyThresh != -1){
-				if(price <= conf.buyThresh) M.buyGood(iG, 10000);
+				if(price <= conf.buyThresh)
+                {
+                    var stock = good.stock
+                    if(M.buyGood(iG, 10000))
+                    {
+                        stock = good.stock - stock
+                        Game.Notify("Buy stock","Bought "+stock+"x " + good.name, good.icon,6);
+                    }
+                }
 			}
 			if(IdleTrading.config.autoSell && conf.sellThresh != -1){
-				if(price >= conf.sellThresh) M.sellGood(iG, 10000);
+				if(price >= conf.sellThresh)
+                {
+                    var stock = good.stock
+                    if(M.sellGood(iG, 10000))
+                    {
+                        stock = stock-good.stock
+                        Game.Notify("Sell stock","Sold "+stock+"x " + good.name, good.icon,6);
+                    }
+                }
 			}
 			
 			if(price < conf.minPrice) conf.minPrice = price;
